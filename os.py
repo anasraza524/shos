@@ -63,7 +63,6 @@ class CPUScheduler:
                 self.high_priority.sort(key=lambda x: x.priority)
                 p = self.high_priority.pop(0)
                 
-                # In this simplified model, HP tasks run to completion
                 exec_time = p.remaining
                 p.waiting_time = self.time
                 self.time += exec_time
@@ -76,10 +75,6 @@ class CPUScheduler:
                 p = self.round_robin.popleft()
                 exec_time = min(self.quantum, p.remaining)
                 
-                # If it's the first time running, set waiting time (simplified)
-                # For basic WT in RR, we sum up all delays.
-                # Actually, let's track it properly by subtracting burst from completion if arrival is 0.
-                
                 p.remaining -= exec_time
                 self.time += exec_time
                 
@@ -90,7 +85,6 @@ class CPUScheduler:
                     p.waiting_time = p.turnaround_time - p.burst
                     print(f"[RR] Process {p.pid} completed. WT: {p.waiting_time}, TAT: {p.turnaround_time}")
             
-            # Age the normal tasks after each "tick" or burst
             self.aging()
 
         print("=== CPU SCHEDULING COMPLETED ===\n")
